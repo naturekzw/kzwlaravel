@@ -15,7 +15,7 @@ class ModelChirpController extends Controller
     public function index(): View
     {
         //
-        return view('routeChirps.index', [
+        return view('chirp.index', [
             'chirpList' => ModelChirp::with('user')->latest()->get(),
         ]);
     }
@@ -51,17 +51,28 @@ class ModelChirpController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ModelChirp $modelChirp)
+    public function edit(ModelChirp $routeChirp): View
     {
-        //
+        $this->authorize('update', $routeChirp);
+
+        return view('chirp.edit', [
+            'chirpEdit' => $routeChirp,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ModelChirp $modelChirp)
+    public function update(Request $request, ModelChirp $routeChirp): RedirectResponse
     {
-        //
+        $this->authorize('update', $routeChirp);
+
+        $validated = $request->validate([
+            'message' => 'required|string|max:255',
+        ]);
+
+        $routeChirp->update($validated);
+        return redirect(route('routeChirps.index'));
     }
 
     /**
