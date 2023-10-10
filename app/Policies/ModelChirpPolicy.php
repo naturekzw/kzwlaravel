@@ -39,7 +39,8 @@ class ModelChirpPolicy
     {
         //
         //return true;
-        return $m->user()->is($user);
+
+        return $m->User()->is($user);
     }
 
     /**
@@ -48,6 +49,7 @@ class ModelChirpPolicy
     public function delete(User $user, ModelChirp $modelChirp): bool
     {
         //
+        return $this->update($user, $modelChirp);
     }
 
     /**

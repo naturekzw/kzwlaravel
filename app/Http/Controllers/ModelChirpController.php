@@ -16,7 +16,7 @@ class ModelChirpController extends Controller
     {
         //
         return view('chirp.index', [
-            'chirpList' => ModelChirp::with('user')->latest()->get(),
+            'chirpList' => ModelChirp::with('User')->latest()->get(),
         ]);
     }
 
@@ -54,7 +54,7 @@ class ModelChirpController extends Controller
     public function edit(ModelChirp $routeChirp): View
     {
         $this->authorize('update', $routeChirp);
-
+        
         return view('chirp.edit', [
             'chirpEdit' => $routeChirp,
         ]);
@@ -66,7 +66,7 @@ class ModelChirpController extends Controller
     public function update(Request $request, ModelChirp $routeChirp): RedirectResponse
     {
         $this->authorize('update', $routeChirp);
-
+       
         $validated = $request->validate([
             'message' => 'required|string|max:255',
         ]);
@@ -78,8 +78,11 @@ class ModelChirpController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ModelChirp $modelChirp)
+    public function destroy(ModelChirp $routeChirp): RedirectResponse
     {
         //
+        $this->authorize('delete', $routeChirp);
+        $routeChirp->delete();
+        return redirect(route('routeChirps.index'));
     }
 }
